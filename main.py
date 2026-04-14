@@ -11,6 +11,7 @@ from core.exceptions import ErrorCode
 from db.database import init_db, close_db
 from models.business import User
 from api.deps import get_current_user
+from api.endpoints import user
 
 
 @asynccontextmanager
@@ -51,6 +52,8 @@ async def global_exception_handler(request: Request, exc: Exception):
     print(f"[系统崩溃] {request.url} - {str(exc)}")
     return fail(code=ErrorCode.SYSTEM_ERR.code, msg=ErrorCode.SYSTEM_ERR.msg)
 
+# 挂载用户模块路由
+app.include_router(user.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def read_root():

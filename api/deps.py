@@ -1,4 +1,5 @@
-from fastapi import Header, Depends
+from fastapi import Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 
 from core.exceptions import BusinessException, ErrorCode
@@ -6,16 +7,16 @@ from models.business import User
 from core.security import decode_access_token
 
 
-async def get_token_from_header(authorization:str = Header(None)) -> str:
+security = HTTPBearer()
+
+async def get_token_from_header(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
     """
     从请求头中提取 Token. 前端通常发：Authorization: Bearer <Token>
-    :param authorization:
-    :return:
     """
-    if not authorization or not authorization.startswith('Bearer '):
+    credentials = credentials.credentials
+    if not credentials:
         raise BusinessException(ErrorCode.AUTH_ERR)
-    # 截取 "Bearer " 后面的真实 token
-    return authorization.split(" ")[1]
+    return credentials
 
 
 async def get_current_user(token: str = Depends(get_token_from_header)) -> User:

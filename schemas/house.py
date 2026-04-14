@@ -2,6 +2,7 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
+
 class HouseCreateIn(BaseModel):
     """ 前端发布房源时传的参数 """
     title: str = Field(..., min_length=5, max_length=100, description="房源标题")

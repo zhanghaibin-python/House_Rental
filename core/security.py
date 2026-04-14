@@ -34,4 +34,4 @@ def decode_access_token(token: str) -> dict:
     """
     解析 JWT Token, 如果过期或被篡改，会抛出 PyJWTError
     """
-    return jwt.decode(token, settings.SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])

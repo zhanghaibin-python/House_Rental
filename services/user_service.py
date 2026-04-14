@@ -46,7 +46,7 @@ class UserService:
             raise BusinessException(ErrorCode.USER_NOT_FOUND_ERR)
 
         # 3. 签发JWT Token
-        token = create_access_token(subject=user_in.id, role=user_in.role)
+        token = create_access_token(subject=user.id, role=user.role.value)
 
         # 返回 Token (符合 OAuth2 标准的结构)
         return {

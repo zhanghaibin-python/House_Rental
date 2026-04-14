@@ -10,7 +10,8 @@ async def init_db():
         db_url=settings.DATABASE_URL,
         modules={
             "models": ["models.business"]
-        }
+        },
+        _enable_global_fallback=True,
     )
     await Tortoise.generate_schemas()
     print("数据库连接成功，表结构已同步! ")
