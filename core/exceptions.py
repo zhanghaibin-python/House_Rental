@@ -8,6 +8,11 @@ class ErrorCode(Enum):
     AUTH_ERR = (4001, "认证失败，请重新登录")
     ACCOUNT_EXIST_ERR = (4002, "账号已存在")
     USER_NOT_FOUND_ERR = (4003, "用户不存在或密码错误")
+    NO_PERMISSION_ERR = (4004, "权限不足，拒绝访问")
+    HOUSE_NOT_FOUND_ERR = (4005, "房源不存在")
+    HOUSE_RENTED_ERR = (4006, "手慢了，该房源已被租走")
+    ORDER_NOT_FOUND_ERR = (4007, "订单不存在")
+
 
     def __init__(self, code: int, msg: str):
         self.code = code

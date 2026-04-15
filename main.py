@@ -11,7 +11,7 @@ from core.exceptions import ErrorCode
 from db.database import init_db, close_db
 from models.business import User
 from api.deps import get_current_user
-from api.endpoints import user
+from api.endpoints import user, house
 
 
 @asynccontextmanager
@@ -54,6 +54,8 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # 挂载用户模块路由
 app.include_router(user.router, prefix=settings.API_V1_STR)
+# 挂载房源模块路由
+app.include_router(house.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def read_root():
