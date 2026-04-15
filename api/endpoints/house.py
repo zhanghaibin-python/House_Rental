@@ -22,7 +22,7 @@ async def require_landlord(current_user: User = Depends(get_current_user)) -> Us
     return current_user
 
 
-@router.post("publish", summary="发布房源")
+@router.post("/publish", summary="发布房源")
 async def publish(house_in: HouseCreateIn, landlord: User = Depends(require_landlord)):
     """
     确保只有 房东才能进门，其它直接被拦截

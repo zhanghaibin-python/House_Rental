@@ -3,6 +3,8 @@ import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.exceptions import RequestValidationError
 from fastapi.requests import Request
+import os
+from starlette.staticfiles import StaticFiles
 
 from core.config import settings
 from core.exceptions import BusinessException
@@ -11,7 +13,7 @@ from core.exceptions import ErrorCode
 from db.database import init_db, close_db
 from models.business import User
 from api.deps import get_current_user
-from api.endpoints import user, house, order
+from api.endpoints import user, house, order, upload
 
 
 @asynccontextmanager
@@ -58,6 +60,13 @@ app.include_router(user.router, prefix=settings.API_V1_STR)
 app.include_router(house.router, prefix=settings.API_V1_STR)
 # 挂载订单模块路由
 app.include_router(order.router, prefix=settings.API_V1_STR)
+
+# 确认启动时存在静态资源文件夹
+os.makedirs("static/images", exist_ok=True)
+# 挂载静态资源文件目录
+app.mount("/static", StaticFiles(directory="static"), name="static")
+# 挂载图片上传路由
+app.include_router(upload.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def read_root():
