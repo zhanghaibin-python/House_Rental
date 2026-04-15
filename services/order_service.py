@@ -3,6 +3,7 @@ from tortoise.transactions import atomic
 from schemas.order import OrderCreateIn
 from models.business import House, Order
 from core.exceptions import BusinessException, ErrorCode
+from core.enums import OrderEnum
 
 
 class OrderService:
@@ -19,7 +20,7 @@ class OrderService:
 
         # 2. 后端安全计算总金额
         # 按每月 30 天算， 算出总天数，乘以 (月租/30)
-        days = (order_in.end_date - order_in.start_date).days
+        days = (order_in.end_date - order_in.begin_date).days
         if days < 0:
             raise BusinessException(ErrorCode.PARAM_ERR)    # 租期必须大于0天
 
@@ -48,7 +49,7 @@ class OrderService:
         if not order:
             raise False
 
-        if order.status == "WAIT_PAY":
+        if order.status.value == OrderEnum.WAIT_PAY.value:
             # 修改订单状态为已支付
             order.status = "PAID"
             await order.save()

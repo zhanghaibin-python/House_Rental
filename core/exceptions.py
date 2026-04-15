@@ -12,6 +12,8 @@ class ErrorCode(Enum):
     HOUSE_NOT_FOUND_ERR = (4005, "房源不存在")
     HOUSE_RENTED_ERR = (4006, "手慢了，该房源已被租走")
     ORDER_NOT_FOUND_ERR = (4007, "订单不存在")
+    FILE_TYPE_ERR = (4008, "不支持的文件格式，仅允许上传图片")
+    FILE_SIZE_ERR = (4009, "文件太大，超过了限制")
 
 
     def __init__(self, code: int, msg: str):
