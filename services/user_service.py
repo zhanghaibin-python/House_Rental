@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 
 
-from schemas.user import UserRegisterIn, UserLoginIn
+from schemas.user import UserRegisterIn, UserLoginIn, UserUpdateIn
 from models.business import User
 from core.exceptions import BusinessException, ErrorCode
 from core.security import create_access_token
@@ -53,5 +53,24 @@ class UserService:
             "access_token": token,
             "token_type": "bearer",
         }
+
+    @staticmethod
+    async def update_user(user_id: int, data: UserUpdateIn):
+        """ 更新用户信息 """
+        user = await User.get_or_none(id=user_id)
+
+        if not user:
+            raise BusinessException(ErrorCode.USER_NOT_FOUND_ERR)
+
+        update_data = data.model_dump(exclude_unset=True)
+
+        if not update_data:
+            raise BusinessException(ErrorCode.NOT_FOUND_FILED)
+
+        await user.update_from_dict(update_data)
+        await user.save()
+
+        return user
+
 
 

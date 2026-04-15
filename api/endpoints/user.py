@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from schemas.user import UserRegisterIn, UserLoginIn
+from schemas.user import UserRegisterIn, UserLoginIn, UserUpdateIn
 from services.user_service import UserService
 from core.response import success
 from models.business import User
@@ -26,4 +26,13 @@ async def get_me(current_user: User = Depends(get_current_user)):
     :return:
     """
     return success(data=current_user.to_dict(exclude=["password"]))
+
+@router.put("/update", summary="更新用户信息")
+async def update_user(user_in: UserUpdateIn, current_user: User = Depends(get_current_user)):
+    """
+    更新用户信息
+    """
+    await UserService.update_user(current_user.id, user_in)
+    return success(data=current_user.to_dict(exclude=["password"]))
+
 
