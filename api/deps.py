@@ -43,3 +43,4 @@ async def get_current_user(token: str = Depends(get_token_from_header)) -> User:
 
     # 把 orm 对象返回给路由函数
     return user
+

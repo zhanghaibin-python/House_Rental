@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 
 
-from schemas.user import UserRegisterIn, UserLoginIn, UserUpdateIn
+from schemas.user import UserRegisterIn, UserLoginIn, UserUpdateIn, ChangePasswordIn
 from models.business import User
 from core.exceptions import BusinessException, ErrorCode
 from core.security import create_access_token
@@ -71,6 +71,32 @@ class UserService:
         await user.save()
 
         return user
+
+    @staticmethod
+    async def change_password(user_id: int, data: ChangePasswordIn):
+        """ 修改用户密码 """
+
+        # 1. 查询用户是否存在
+        user = await User.get_or_none(id=user_id)
+        if not user:
+            raise BusinessException(ErrorCode.USER_NOT_FOUND_ERR)
+
+        # 2. 验证旧密码正确性
+        is_old_password = pwd_context.verify(user.password, data.old_password)
+        if not is_old_password:
+            return BusinessException(ErrorCode.USER_NOT_FOUND_ERR)
+
+        # 3. 新密码进行哈希进行加密，并设置新密码
+        hashed_new_password = pwd_context.hash(data.new_password)
+        user.password = hashed_new_password
+
+        await user.save()
+
+        return user
+
+
+
+
 
 
 
